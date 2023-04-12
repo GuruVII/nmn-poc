@@ -1,0 +1,58 @@
+/* TODO: cut out unused weights */
+@import url('https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:wght@300;400;600;700&family=Tillana:wght@400;700&display=swap');
+
+@import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;/* color palette from <https://github.com/vuejs/theme> */
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+
+#app {
+  @apply text-white font-sans bg-black;
+
+  margin: 0 auto;
+  padding: 1rem;
+  font-weight: normal;
+
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  @apply text-orange;
+}
+
+
+h1 {
+  @apply font-bold font-serif text-3xl;
+}
+h2 {
+  @apply font-bold font-serif  text-2xl;
+}
+h3 {
+  @apply font-bold font-serif  text-xl;
+}
+
+@media (hover: hover) {
+  a:hover {
+    @apply text-orange-light cursor-pointer;
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 1rem;
+  }
+}
