@@ -62,14 +62,14 @@ watch([props.card], ([currentCard]) => {
         >
       </a>
       <button
-        v-if="!justCollected"
+        v-if="!justCollected || (props.card?.hintCards?.length ?? 0 > 1)"
         class="h-full border border-orange bg-gradient-to-b from-orange/25 to-orange/20 text-orange px-6 flex items-center justify-center"
         @click="emit('close')"
       >
         {{ $t("popups.close") }}
       </button>
       <button
-        v-if="justCollected"
+        v-else
         class="h-full border border-orange bg-gradient-to-b from-orange/25 to-orange/20 text-orange px-6 flex items-center justify-center"
         @click="emit('close')"
       >
@@ -182,6 +182,7 @@ watch([props.card], ([currentCard]) => {
     <!-- card has encryption -->
     <!-- navigation in case of multi-cards -->
     <div
+      v-if="props.card?.hintCards?.length ?? 0 > 1"
       class="flex flex-row justify-between bg-gradient-to-b from-brown to-brown/75 h-[3rem] items-center w-full px-4 leading-none"
     >
       <div
