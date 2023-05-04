@@ -54,7 +54,7 @@ const currentCardIndex = ref(0);
           HintCardFormat.Text
         "
       >
-        <div class="font-hand w-full h-full overflow-auto p-4">
+        <div class="font-hand w-full h-full overflow-auto p-4 flex-col">
           <div
             v-html="
               getOptionallyTranslatedText(
@@ -63,6 +63,21 @@ const currentCardIndex = ref(0);
               )
             "
           ></div>
+        </div>
+        <!-- encryption -->
+        <div
+          v-if="props.card?.hintCards[currentCardIndex].encryption"
+          class="flex flex-col w-full h-full"
+        >
+          <Encryption
+            :correctPassword="
+              props.card?.hintCards[currentCardIndex].encryption
+                ?.correctPassword
+            "
+            :decodedMessage="
+              props.card?.hintCards[currentCardIndex].encryption?.decodedMessage
+            "
+          />
         </div>
       </template>
 
@@ -95,36 +110,54 @@ const currentCardIndex = ref(0);
               "
             ></div>
           </div>
+          <!-- encryption -->
+          <div
+            v-if="props.card?.hintCards[currentCardIndex].encryption"
+            class="flex flex-col w-full h-full"
+          >
+            <Encryption
+              :correctPassword="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.correctPassword
+              "
+              :decodedMessage="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.decodedMessage
+              "
+            />
+          </div>
         </div>
       </template>
 
       <!-- card type: image only -->
       <template v-else>
-        <div class="card-image frame w-full h-full">
+        <div class="card-image frame w-full h-full flex-col">
           <div
             class="card-image image w-full h-full"
             :style="{
               'background-image': `url(${props.card?.hintCards[currentCardIndex].imageUrl})`,
             }"
           ></div>
-        </div>
-      </template>
-      <!-- card has encryption -->
-      <template v-if="props.card?.hintCards[currentCardIndex].encryption">
-        <div class="flex flex-col w-full h-full">
-          <Encryption
-            :correctPassword="
-              props.card?.hintCards[currentCardIndex].encryption
-                ?.correctPassword
-            "
-            :decodedMessage="
-              props.card?.hintCards[currentCardIndex].encryption?.decodedMessage
-            "
-          />
+          <!-- encryption -->
+          <div
+            v-if="props.card?.hintCards[currentCardIndex].encryption"
+            class="flex flex-col w-full h-full"
+          >
+            <Encryption
+              :correctPassword="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.correctPassword
+              "
+              :decodedMessage="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.decodedMessage
+              "
+            />
+          </div>
         </div>
       </template>
     </div>
-
+    <!-- card has encryption -->
     <!-- navigation in case of multi-cards -->
     <div
       class="flex flex-row justify-between bg-gradient-to-b from-brown to-brown/75 h-[3rem] items-center w-full px-4 leading-none"

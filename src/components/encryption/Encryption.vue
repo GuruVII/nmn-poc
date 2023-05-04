@@ -2,7 +2,18 @@
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 let code = "";
-
+const labels = {
+  code: {
+    sl_m: "Vnesite kodo",
+    sl_f: "Vnesite kodo",
+    en: "Input the password",
+  },
+  message: {
+    sl_m: "Dekodirano sporočilo",
+    sl_f: "Dekodirano sporočilo",
+    en: "Decoded message",
+  },
+};
 const emit = defineEmits(["correctCodeInputted"]);
 const props = defineProps({
   correctPassword: {
@@ -49,17 +60,33 @@ const decode = () => {
 };
 </script>
 <template>
-  <span>{{ message }}</span>
-  <input
-    class="encryption-input"
-    type="text"
-    v-model="code"
-    @keyup="decode()"
-  />
+  <div class="flex flex-col w-full encryption-positioning">
+    <div class="flex encryption-positioning">
+      <span>{{ labels.message[locale] }}:</span><span>{{ message }}</span>
+    </div>
+    <div class="flex flex-row w-full encryption-positioning">
+      <span>{{ labels.code[locale] }}: </span>
+      <input
+        class="encryption-input"
+        type="text"
+        v-model="code"
+        @keyup="decode()"
+      />
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
+.encryption-positioning {
+  gap: 1rem;
+  &.flex-col {
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
 .encryption-input {
   color: #000;
+  width: 50%;
+  margin-right: 1rem;
 }
 </style>
