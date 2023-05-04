@@ -5,11 +5,7 @@ import Encryption from "@/components/encryption/Encryption.vue";
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-const props: {
-  card?: HintCardData,
-  justCollected: boolean,
-  previouslyDecoded: boolean
-} = defineProps({
+const props= defineProps({
   card: {
     type: Object,
   },
@@ -19,7 +15,7 @@ const props: {
   previouslyDecoded: {
     type: Boolean,
   }
-}) as any;
+});
 const emit = defineEmits(["close", "earned"]);
 
 const { locale } = useI18n({ useScope: "global" });
@@ -112,10 +108,7 @@ watch([props.card], ([currentCard]) => {
 
       <!-- card type: text + image | image is 1:1 aspect ratio -->
       <template
-        v-else-if="
-          props.card?.hintCards[currentCardIndex].cardFormat ===
-          HintCardFormat.ImageText
-        "
+        v-else-if="props.card?.hintCards[currentCardIndex].cardFormat === HintCardFormat.ImageText"
       >
         <div class="flex flex-col w-full h-full">
           <!-- image -->
@@ -129,7 +122,7 @@ watch([props.card], ([currentCard]) => {
           </div>
 
           <!-- text -->
-          <div class="card-image-text text-frame flex-1 overflow-auto">
+          <div class="card-image-text text-frame flex-1 overflow-auto m-4 pt-4">
             <div
               v-html="
                 getOptionallyTranslatedText(
@@ -144,12 +137,11 @@ watch([props.card], ([currentCard]) => {
             v-if="props.card?.hintCards[currentCardIndex].encryption"
             class="flex flex-col w-full h-full"
           >
-              <Encryption
-                :correctPassword="props.card?.hintCards[currentCardIndex].encryption?.correctPassword"
-                :decodedMessage="props.card?.hintCards[currentCardIndex].encryption?.decodedMessage"
-                :collected="props.previouslyDecoded"
-                @decrypted="emit('earned')"
-              />
+            <Encryption
+              :correctPassword="props.card?.hintCards[currentCardIndex].encryption?.correctPassword"
+              :decodedMessage="props.card?.hintCards[currentCardIndex].encryption?.decodedMessage"
+              :collected="props.previouslyDecoded"
+              @decrypted="emit('earned')"
             />
           </div>
         </div>
