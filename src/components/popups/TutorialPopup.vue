@@ -2,39 +2,15 @@
 import type { HintCardData } from "@/config/cards";
 import { getOptionallyTranslatedText, HintCardFormat } from "@/config/cards";
 import Encryption from "@/components/encryption/Encryption.vue";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-const props: {
-  card?: HintCardData,
-  justCollected: boolean,
-  previouslyDecoded: boolean
-} = defineProps({
-  card: {
-    type: Object,
-  },
-  justCollected: {
-    type: Boolean,
-  },
-  previouslyDecoded: {
-    type: Boolean,
-  }
-}) as any;
-const emit = defineEmits(["close", "earned"]);
+const props: { card?: HintCardData } = defineProps(["card"]);
+const emit = defineEmits(["close"]);
 
 const { locale } = useI18n({ useScope: "global" });
 
 const currentCardIndex = ref(0);
-
-watch([props.card], ([currentCard]) => {
-  if (currentCard) {
-    const hasEncryption = currentCard.hintCards.find(x => x.encryption);
-    if (!hasEncryption) {
-      emit('earned');
-    }
-  }
-});
-
 </script>
 <template>
   <div
@@ -62,14 +38,6 @@ watch([props.card], ([currentCard]) => {
         >
       </a>
       <button
-        v-if="!justCollected"
-        class="h-full border border-orange bg-gradient-to-b from-orange/25 to-orange/20 text-orange px-6 flex items-center justify-center"
-        @click="emit('close')"
-      >
-        {{ $t("popups.close") }}
-      </button>
-      <button
-        v-if="justCollected"
         class="h-full border border-orange bg-gradient-to-b from-orange/25 to-orange/20 text-orange px-6 flex items-center justify-center"
         @click="emit('close')"
       >
@@ -102,10 +70,13 @@ watch([props.card], ([currentCard]) => {
           class="flex flex-col w-full h-full"
         >
           <Encryption
-            :correctPassword="props.card?.hintCards[currentCardIndex].encryption?.correctPassword"
-            :decodedMessage="props.card?.hintCards[currentCardIndex].encryption?.decodedMessage"
-            :collected="props.previouslyDecoded"
-            @decrypted="emit('earned')"
+            :correctPassword="
+              props.card?.hintCards[currentCardIndex].encryption
+                ?.correctPassword
+            "
+            :decodedMessage="
+              props.card?.hintCards[currentCardIndex].encryption?.decodedMessage
+            "
           />
         </div>
       </template>
@@ -144,12 +115,15 @@ watch([props.card], ([currentCard]) => {
             v-if="props.card?.hintCards[currentCardIndex].encryption"
             class="flex flex-col w-full h-full"
           >
-              <Encryption
-                :correctPassword="props.card?.hintCards[currentCardIndex].encryption?.correctPassword"
-                :decodedMessage="props.card?.hintCards[currentCardIndex].encryption?.decodedMessage"
-                :collected="props.previouslyDecoded"
-                @decrypted="emit('earned')"
-              />
+            <Encryption
+              :correctPassword="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.correctPassword
+              "
+              :decodedMessage="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.decodedMessage
+              "
             />
           </div>
         </div>
@@ -170,10 +144,14 @@ watch([props.card], ([currentCard]) => {
             class="flex flex-col w-full h-full"
           >
             <Encryption
-              :correctPassword="props.card?.hintCards[currentCardIndex].encryption?.correctPassword"
-              :decodedMessage="props.card?.hintCards[currentCardIndex].encryption?.decodedMessage"
-              :collected="props.previouslyDecoded"
-              @decrypted="emit('earned')"
+              :correctPassword="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.correctPassword
+              "
+              :decodedMessage="
+                props.card?.hintCards[currentCardIndex].encryption
+                  ?.decodedMessage
+              "
             />
           </div>
         </div>
