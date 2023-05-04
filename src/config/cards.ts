@@ -20,6 +20,7 @@ export type HintCard = {
   cardFormat: HintCardFormat,
   imageUrl?: string;
   text?: TranslatedText
+  encryption?: {correctPassword: string, decodedMessage: string}
 }
 
 
@@ -49,6 +50,10 @@ export const availableCards: {[x: string]: HintCardData} = {
           sl_f: 'Pred tabo stoji ponosni borec za Ascalon, ki po pravici ne pripada ljudem. Zate ima namig.',
           en: 'A proud fighter for Ascalon — which is rightful charr clay — stands before you with a hint.',
         },
+        encryption: {
+          correctPassword: 'sivaeminenca',
+          decodedMessage: 'I like cake',
+        }
       },
       {
         cardFormat: HintCardFormat.Text,
