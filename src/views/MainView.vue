@@ -22,6 +22,7 @@ const { locale } = useI18n({ useScope: "global" });
 const gameStore = ref(
   initialStorage ?? {
     collectedCards: [],
+    earnedCards: [],
     mosaicParts: [],
   }
 );
@@ -62,6 +63,26 @@ function isCodeRedeemed(code?: string) {
 }
 
 /**
+ * Checks whether card has been earned. Card has been earned
+ * upon collection if no encryption is present, or upon completion
+ * of QR code.
+ */
+function isCardEarned(code?: string) {
+  if (!code) {
+    return false;
+  }
+  return gameStore?.value?.collectedCards?.includes(code);
+}
+
+/**
+ * Gets a list of mosaic parts that user will be awarded
+ * @param n
+ */
+function getRandomMosaicPart(n: number = 1) {
+
+}
+
+/**
  * Checks whether code is valid.
  * For code to be valid, cards.ts->availableCards must contain object with keys
  * that matches the code. No code given is valid — it will just show our collection
@@ -86,6 +107,11 @@ function languageUpdated(updatedConfig: any) {
   localStorage.setItem("config", JSON.stringify(gameConfig.value));
 }
 
+/**
+ * Updates cards that user has gathered.
+ * NOTE: this method doesn't grant mosaic parts
+ * @param cardKey
+ */
 function collectedCardUpdated(cardKey: string) {
   if (gameStore.value.collectedCards.includes(cardKey)) {
     return;
@@ -93,14 +119,29 @@ function collectedCardUpdated(cardKey: string) {
   gameStore.value = {
     ...gameStore.value,
     collectedCards: [...gameStore.value.collectedCards, cardKey],
-    mosaicParts: [
-      ...gameStore.value.mosaicParts,
-      availableCards[cardKey].grants,
-    ],
   };
 
   console.log("setting campaign state:", gameStore.value);
   localStorage.setItem("campaign-state", JSON.stringify(gameStore.value));
+}
+
+/**
+ * Grants user new mosaic pieces.
+ * @param cardKey
+ */
+function earnedCardUpdated(cardKey: string) {
+  if (gameStore.value.earnedCards.includes(cardKey)) {
+    return;
+  }
+
+  const newMosaicParts = getRandomMosaicPart()
+
+  gameStore.value = {
+    ...gameStore.value,
+    earnedCards: [...gameStore.value.earnedCards, cardKey],
+  }
+
+
 }
 
 // determine which card to show
