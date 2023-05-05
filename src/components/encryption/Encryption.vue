@@ -1,6 +1,24 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
+
+const { locale } = useI18n({ useScope: "global" });
+const props = defineProps({
+  correctPassword: {
+    type: String,
+    required: true,
+  },
+  decodedMessage: {
+    type: String,
+    required: true,
+  },
+  collected: {
+    type: Boolean
+  }
+});
+const emit = defineEmits(["decrypted"]);
+
+
 let code = "";
 const labels = {
   code: {
@@ -14,17 +32,6 @@ const labels = {
     en: "Decoded message",
   },
 };
-const emit = defineEmits(["correctCodeInputted"]);
-const props = defineProps({
-  correctPassword: {
-    type: String,
-    required: true,
-  },
-  decodedMessage: {
-    type: String,
-    required: true,
-  },
-});
 
 const correctCodeIntegerValue = [...props.correctPassword].reduce(
   (acc, item) => {
@@ -39,7 +46,6 @@ let message = ref(
   String.fromCharCode(...messageIntegerArray.map((item) => item - 1))
 );
 
-const { locale } = useI18n({ useScope: "global" });
 const decode = () => {
   let passwordIntegerValue = [...code].reduce((acc, item) => {
     return acc + item.charCodeAt(0);
@@ -55,9 +61,15 @@ const decode = () => {
   );
   if (code === props.correctPassword) {
     console.log(message.value);
-    emit("correctCodeInputted", true);
+    emit("decrypted", true);
   }
 };
+
+// dont require password entry on already earned cards
+if (props.collected) {
+  code = props.correctPassword;
+  decode();
+}
 </script>
 <template>
   <div class="flex flex-col w-full encryption-positioning">
