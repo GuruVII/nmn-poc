@@ -145,9 +145,7 @@ function earnedCardUpdated(cardKey: string) {
 }
 
 // determine which card to show
-const code =
-  (Array.isArray(route.query.code) ? route.query.code[0] : route.query.code) ??
-  undefined;
+const code = (Array.isArray(route.query.code) ? route.query.code[0] : route.query.code) ?? undefined;
 
 if (!isCodeValid(code)) {
   showInvalidCode.value = true;
@@ -199,7 +197,7 @@ function setActiveCard(card: HintCardData) {
             :key="cardKey"
             class="flex flex-row p-1 bg-gradient-to-b from-brown to-brown/75 items-center gap-4 px-4"
           >
-            <div class="flex flex-col flex-1">
+            <div v-if="availableCards[cardKey]" class="flex flex-col flex-1">
               <div
                 class="font-serif font-bold text-emphasis text-xl text-orange"
               >
