@@ -345,22 +345,4 @@ export const availableCards: {[x: string]: HintCardData} = {
       path: '/images/mosaic/l1.webp',
     }
   },
-  urkog: {
-    title: 'The Shaman',
-    name: 'Urkôg of clan Kulšodôbri',
-    externalSite: {
-      href: 'https://github.com/tamius-han/'
-    },
-    hintCards: [{
-      cardFormat: HintCardFormat.ImageText,
-      imageUrl: '/images/cards/orgrim.webp',
-      text: {
-        sl_m: 'Jst sm ork, ki spamma. Ni tle modov, tud ne bana.',
-        sl_f: 'Jst sm ork, ki spamma. Ni tle modov, tud ne bana.',
-        en: 'me orc. me spam. no mods. no ban'
-      }
-    }],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
 };
