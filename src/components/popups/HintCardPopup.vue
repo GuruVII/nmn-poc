@@ -122,7 +122,7 @@ watch([props.card], ([currentCard]) => {
           </div>
 
           <!-- text -->
-          <div class="card-image-text text-frame flex-1 overflow-auto m-4 pt-4">
+          <div class="card-image-text text-frame flex-1 overflow-auto m-4 mt-0 pt-4 border-t border-orange">
             <div
               v-html="
                 getOptionallyTranslatedText(
