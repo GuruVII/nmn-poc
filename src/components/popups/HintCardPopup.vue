@@ -24,7 +24,9 @@ const currentCardIndex = ref(0);
 
 watch([props.card], ([currentCard]) => {
   if (currentCard) {
-    const hasEncryption = currentCard.hintCards.find(x => x.encryption);
+    console.info('Current card:', currentCard);
+    console.info('Encryption present?', currentCard.hintCards.find( (x: any) => x.encryption))
+    const hasEncryption = currentCard.hintCards.find( (x :any) => x.encryption);
     if (!hasEncryption) {
       emit('earned');
     }

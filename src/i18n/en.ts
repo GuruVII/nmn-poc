@@ -9,6 +9,7 @@ export const en = {
   },
   popups: {
     close: 'Close',
+    continue: 'Continue',
     open: 'Open',
     hintCard: {
       follow: 'visit me!',
@@ -28,6 +29,10 @@ export const en = {
     aboutCard: 'The cards were submitted by various individuals and clubs. Every card thus contains individual\'s or club\'s name, an image they use to represent themselves on this treasure hunt, and a few words about themselves. By clicking the "visit me" link, you can also visit their website or social media.',
     gib: 'Every card you get will give you a piece of a mosaic. Your mission, should you choose to accept it, is to find all the pieces of the mosaic. Pay attention — some stands who collaborate with us on this treasure hunt may offer rewards for completing the mosaic.',
     disclaimer: 'IMPORTANT: this app will not work in incognito mode, or browsers that clean or reject cookies.',
-    disclaimer2: 'This hunt for QR codes is organized by club Amulet D20, and not by NMN. Ask the questgiver for more details.'
+    disclaimer2: 'This hunt for QR codes is organized by club Amulet D20, and not by NMN. Ask the Questgiver for more details.'
+  },
+  main: {
+    title: 'Mosaic',
+    myCards: 'My cards',
   }
 };
