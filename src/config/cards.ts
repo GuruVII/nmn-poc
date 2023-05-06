@@ -1,4 +1,3 @@
-
 export type TranslatedText = {sl_m: string, sl_f?: string, en?: string};
 export type OptionallyTranslatedText = string | TranslatedText;
 
@@ -30,7 +29,7 @@ export type HintCardData = {
   name: OptionallyTranslatedText,
   externalSite?: {href: string, title?: string} // title should probably be removed!
   hintCards: HintCard[],
-  grants: {path: string, z?: number}
+  grants: number,
 }
 
 export const availableCards: {[x: string]: HintCardData} = {
@@ -50,12 +49,10 @@ export const availableCards: {[x: string]: HintCardData} = {
           sl_f: 'Trgovina z nakitom, dodatki in dekorativnimi izdelki za vse ljubitelje zgodovine, fantazije, mitologije, srednjega veka, gotike, čarobnih kamnov, zmajev, vil in ostalih mističnih bitij.',
           en: 'Shop with jewelry, accessories and decorative products for all lovers of history, fantasy, mythology, the Middle Ages, Gothic style, magical stones, dragons, fairies and other mystical creatures.',
         },
-        
+
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   belaanabyanabela: {
     title: 'BelaanaByAnabela',
@@ -75,9 +72,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   anyanary: {
     title: 'Anyanary',
@@ -97,9 +92,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   ashiewolfe: {
     title: 'Ashiewolfe',
@@ -120,9 +113,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   mofucon: {
     title: 'MofuCon',
@@ -136,15 +127,12 @@ export const availableCards: {[x: string]: HintCardData} = {
         imageUrl: '/images/cards/mufocon.png',
         cardFormat: HintCardFormat.ImageText,
         text: {
-          sl_m: 'Trgovina z nakitom, dodatki in dekorativnimi izdelki za vse ljubitelje zgodovine, fantazije, mitologije, srednjega veka, gotike, čarobnih kamnov, zmajev, vil in ostalih mističnih bitij.',
-          sl_f: 'Trgovina z nakitom, dodatki in dekorativnimi izdelki za vse ljubitelje zgodovine, fantazije, mitologije, srednjega veka, gotike, čarobnih kamnov, zmajev, vil in ostalih mističnih bitij.',
-          en: 'Shop with jewelry, accessories and decorative products for all lovers of history, fantasy, mythology, the Middle Ages, Gothic style, magical stones, dragons, fairies and other mystical creatures.',
+          sl_m: 'MofuCon je največja anime konvencija v Sloveniji. Na naši stojnici se lahko potopite v našo manga knjižnico in spremljate dogodivščine vaših najljubših anime likov. A to ni vse. Na stojnici bomo igrali japonsko igro s kartami imenovano karuta, ki je podobna igri spomina. Pozor, dodali smo ji namreč anime pridih! Pridružite se nam!',
+          en: 'MofuCon is the largest anime convention in Slovenia. At our stand, you can immerse yourself in our manga library and follow the adventures of your favourite anime characters. But that\'s not all. At thstand we will play a Japanese card game called karuta, which is similar to a game of memory. Attention, we have added an anime touch to it! Join us!',
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   cheekyorchid: {
     title: 'Cheeky Orchid',
@@ -164,9 +152,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   wargamingslovenija: {
     title: 'Wargaming Slovenija',
@@ -186,9 +172,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   umiko: {
     title: 'Kulturno društvo UMIKO',
@@ -208,9 +192,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   'gil-galad': {
     title: 'Slovensko Tolkienovo društvo Gil-galad',
@@ -230,9 +212,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 1
   },
   larp: {
     title: 'Slovenska LARP skupnost',
@@ -252,9 +232,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants: 2
   },
   imshynka: {
     title: 'ImShyka',
@@ -274,9 +252,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants:1
   },
   lonelywolf: {
     title: 'lonelywolfJ',
@@ -297,9 +273,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants:1
   },
   sitri: {
     title: 'Sitri',
@@ -319,9 +293,7 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants:1
   },
   questgiver: {
     title: 'The Questgiver',
@@ -341,8 +313,33 @@ export const availableCards: {[x: string]: HintCardData} = {
         },
       },
     ],
-    grants: {
-      path: '/images/mosaic/l1.webp',
-    }
+    grants:2
   },
+  orcwmd: {
+    title: 'Tajni podatki',
+    name: 'Red šepetov',
+    externalSite: {
+      href: 'https://instagram.com/shaman_urkog/',
+      title: 'website'
+    },
+    hintCards: [
+      {
+        imageUrl: '/images/cards/orcwmd-0.webp',
+        cardFormat: HintCardFormat.ImageText,
+        text: {
+          sl_m: 'V gorah proti severu so se začele pojavljati čudne kovinske stebre. Zdi se, da orki zanje zelo dobro skrbijo. Na prvi pogled ni videti, da bi te stvari predstavljale kakšno nevarnost.',
+          en: 'Strange steel towers have started to appear in the mountains to the north. Orcs seem to care for them ... reasonably well. At the first glance it doesn\'t seem dangerous.'
+        }
+      },
+      {
+        imageUrl: '/images/cards/orcwmd-1.webp',
+        cardFormat: HintCardFormat.ImageText,
+        text: {
+          sl_m: 'Prvi pogled pogosto zavaja. Skupina potikavcev je sledila stebrom in odkrila, da vodijo do ene izmed višjih gora. Na vrhu gore sedi velikanska stavba, iz katere se v nebo dvigajo mogočne vrvi, na katere so vpete košare. Njihovega namena niso odkrili, vendar pa verjetno ne pomeni nič dobrega.',
+          en: 'A group of rangers followed the steel towers — they lead to one of the highest mountains in the area. At the top of the mountains is a giant building, from which giant ropes rise into the sky, with giant baskets attached to them. Their purpose is so far still unknown, but it cannot be good.'
+        }
+      }
+    ],
+    grants: 1
+  }
 };
