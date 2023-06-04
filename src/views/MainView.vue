@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { availableCards, type HintCardData } from "@/config/cards";
 import LanguageSelectPopup from "@/components/popups/LanguageSelectPopup.vue";
+import SimpleTutorialPopup from "@/components/popups/SimpleTutorialPopup.vue";
 import HintCardPopup from "@/components/popups/HintCardPopup.vue";
 import { useI18n } from "vue-i18n";
 import { getOptionallyTranslatedText } from "@/config/cards";
@@ -11,10 +12,16 @@ import { getOptionallyTranslatedText } from "@/config/cards";
 const initialStorage = JSON.parse(localStorage.getItem("campaign-state")!);
 const config = JSON.parse(localStorage.getItem("config")!);
 
-const showLanguagePopup = ref(!initialStorage || !config || config.firstTime);
+const showLanguagePopup = ref(!initialStorage || !config);
+const showTutorial = ref(!initialStorage || !config || config.showTutorial)
 const showCardsPopup = ref(true);
 const showInvalidCode = ref(false);
 const activeCard = ref(null as HintCardData | null);
+const activeCardCode = ref(null as string | null);
+
+// how many tiles will the full mosaic have.
+// mosaic images are named 0.webp -> [mosaicSize - 1].webp
+const mosaicSize = 16;
 
 const route = useRoute();
 const { locale } = useI18n({ useScope: "global" });
@@ -30,24 +37,33 @@ const gameConfig = ref(
   config ?? {
     language: "sl_m",
     firstTime: true,
+    showTutorial: true,
   }
 );
 
 // initialize storage if necessary
 if (showLanguagePopup) {
+  console.info('We are showing language popup because user prolly visited the page for the first time.');
+  console.info('config?', config, 'first time?', !!config?.firstTime, 'initial storage:', initialStorage);
   localStorage.setItem("campaign-state", JSON.stringify(gameStore.value));
   localStorage.setItem("config", JSON.stringify(gameConfig.value));
 }
 
-function generateMosaic() {
-  // put elements with undefined z at the start, meaning they render at the bottom
-  gameStore.value.mosaicParts = gameStore.value.mosaicParts
-    .sort((a: any, b: any) => (a.z < b.z ? 1 : -1))
-    .reverse();
-}
+// Generate mosaic code is currently obsolete
+// function generateMosaic() {
+//   // put elements with undefined z at the start, meaning they render at the bottom
+//   gameStore.value.mosaicParts = gameStore.value.mosaicParts
+//     .sort((a: any, b: any) => (a.z < b.z ? 1 : -1))
+//     .reverse();
+// }
 
-// ensure already collected mosaic parts are always re-ordered
-generateMosaic();
+// // ensure already collected mosaic parts are always re-ordered
+// generateMosaic();
+
+function updateConfig(key: 'language' | 'firstTime' | 'showTutorial', value: any) {
+  gameConfig.value[key] = value;
+  localStorage.setItem("config", JSON.stringify(gameConfig.value));
+}
 
 /**
  * Checks whether given code has been redeemed.
@@ -79,7 +95,26 @@ function isCardEarned(code?: string) {
  * @param n
  */
 function getRandomMosaicPart(n: number = 1) {
+  const parts: number[] = [];
+  let grantedParts = 0;
 
+  while (grantedParts < n) {
+    // if all mosaic parts were granted, there's no mosaics left to collect
+    if (gameStore.value.mosaicParts.length === mosaicSize) {
+      return parts;
+    }
+
+    const draw = Math.floor(Math.random() * mosaicSize);
+
+    // re-draw if we already got the current piece
+    if (gameStore.value.mosaicParts.includes(draw)) {
+      continue;
+    }
+    gameStore.value.mosaicParts.push(draw);
+    grantedParts++;
+  }
+
+  return parts;
 }
 
 /**
@@ -103,8 +138,21 @@ function isCodeValid(code?: string) {
 function languageUpdated(updatedConfig: any) {
   gameConfig.value = { ...gameConfig.value, ...updatedConfig };
   showLanguagePopup.value = false;
+  updateConfig('firstTime', false);
 
   localStorage.setItem("config", JSON.stringify(gameConfig.value));
+}
+
+function tutorialCompleted() {
+  console.log('tutorial completed!');
+  updateConfig('firstTime', false);
+  updateConfig('showTutorial', false);
+  showTutorial.value = false;
+}
+
+function reset() {
+  localStorage.removeItem('campaign-state');
+  window.location.reload();
 }
 
 /**
@@ -121,7 +169,7 @@ function collectedCardUpdated(cardKey: string) {
     collectedCards: [...gameStore.value.collectedCards, cardKey],
   };
 
-  console.log("setting campaign state:", gameStore.value);
+  // console.log("setting campaign state:", gameStore.value);
   localStorage.setItem("campaign-state", JSON.stringify(gameStore.value));
 }
 
@@ -129,44 +177,65 @@ function collectedCardUpdated(cardKey: string) {
  * Grants user new mosaic pieces.
  * @param cardKey
  */
-function earnedCardUpdated(cardKey: string) {
+function earnedCardUpdated(cardKey?: string | null) {
+  if (!cardKey) {
+    return;
+  }
   if (gameStore.value.earnedCards.includes(cardKey)) {
     return;
   }
 
-  const newMosaicParts = getRandomMosaicPart()
+  const newMosaicParts = getRandomMosaicPart(availableCards[cardKey].grants)
 
   gameStore.value = {
     ...gameStore.value,
     earnedCards: [...gameStore.value.earnedCards, cardKey],
+    mosaicParts: [...gameStore.value.mosaicParts, ...newMosaicParts]
   }
-
-
+  localStorage.setItem("campaign-state", JSON.stringify(gameStore.value));
 }
 
-// determine which card to show
-const code =
-  (Array.isArray(route.query.code) ? route.query.code[0] : route.query.code) ??
-  undefined;
-
-if (!isCodeValid(code)) {
-  showInvalidCode.value = true;
-}
-if (!isCodeRedeemed(code)) {
-  if (code) {
-    activeCard.value = availableCards[code];
-    collectedCardUpdated(code);
-    generateMosaic();
-  }
+/**
+ * Shows popup with card content
+ * @param card
+ * @param code
+ */
+function setActiveCard(card: HintCardData, code: string) {
+  setCardsPopupState(false); // HIDE GOD DAMN POPUP WITH CARD LIST
+  activeCard.value = card;
+  activeCardCode.value = code;
 }
 
+/**
+ * Sets state of popup that shows collected cards.
+ * @param state
+ */
 function setCardsPopupState(state: boolean) {
   showCardsPopup.value = state;
 }
-function setActiveCard(card: HintCardData) {
-  setCardsPopupState(false);
-  activeCard.value = card;
+
+function clearSelectedCard() {
+  activeCard.value = null;
+  activeCardCode.value = null;
 }
+
+// determine which card to show
+const code = (Array.isArray(route.query.code) ? route.query.code[0] : route.query.code) ?? undefined;
+
+if (!isCodeValid(code)) {
+  showInvalidCode.value = true;
+} else {
+  console.log(`code`, code, 'is valid!');
+}
+if (!isCodeRedeemed(code)) {
+  console.log('code is not redeemed. showing popup ...')
+  if (code) {
+    collectedCardUpdated(code);
+    setActiveCard(availableCards[code], code);
+    earnedCardUpdated(code);
+  }
+}
+
 </script>
 <template>
   <div class="bg-black text-white w-full h-full min-h-[90vh] flex flex-col">
@@ -177,8 +246,15 @@ function setActiveCard(card: HintCardData) {
         @close="showLanguagePopup = false"
       />
     </template>
-    <template v-if="activeCard">
-      <HintCardPopup :card="activeCard" @close="activeCard = null" />
+    <template v-else-if="showTutorial">
+      <SimpleTutorialPopup @close="tutorialCompleted"></SimpleTutorialPopup>
+    </template>
+    <template v-else-if="activeCard">
+      <HintCardPopup
+        :card="activeCard"
+        @earned="earnedCardUpdated(activeCardCode)"
+        @close="clearSelectedCard"
+       />
     </template>
     <template v-if="showCardsPopup">
       <div class="fixed w-full h-full left-0 top-0 z-30 bg-black text-white">
@@ -199,7 +275,8 @@ function setActiveCard(card: HintCardData) {
             :key="cardKey"
             class="flex flex-row p-1 bg-gradient-to-b from-brown to-brown/75 items-center gap-4 px-4"
           >
-            <div class="flex flex-col flex-1">
+          <!-- :class="{'bg-gradient-to-b from-orange to-orange/75': isCardEarned(cardKey)}" -->
+            <div v-if="availableCards[cardKey]" class="flex flex-col flex-1">
               <div
                 class="font-serif font-bold text-emphasis text-xl text-orange"
               >
@@ -228,7 +305,7 @@ function setActiveCard(card: HintCardData) {
               {{ $t("popups.hintCardList.follow") }}
             </a>
             <button
-              @click="setActiveCard(availableCards[cardKey])"
+              @click="setActiveCard(availableCards[cardKey], cardKey)"
               class="text-orange border border-orange px-4 py-2 bg-gradient-to-b from-orange/25 to-orange/20"
             >
               {{ $t("popups.open") }}
@@ -237,18 +314,28 @@ function setActiveCard(card: HintCardData) {
         </div>
       </div>
     </template>
-    <div class="w-full flex flex-row justify-end">
-      <div class="" @click="setCardsPopupState(true)">
-        Moje kartice ({{ gameStore.collectedCards.length }})
-      </div>
+
+    <!-- header -->
+    <div
+      class="flex flex-row items-center bg-gradient-to-b from-brown to-brown/75 space-between w-full px-3 py-2 -m-4 mb-4 w-[calc(100%+2rem)]"
+    >
+      <h1 class="flex flex-col flex-1 text-orange">{{ $t('main.title') }}</h1>
+      <button
+        class="h-full border border-orange bg-gradient-to-b from-orange/25 to-orange/20 text-orange px-6 flex items-center justify-center"
+        @click="setCardsPopupState(true)"
+      >
+        {{ $t("main.myCards") }}  ({{ gameStore.collectedCards.length }})
+      </button>
     </div>
+
+    <!-- content -->
     <div class="relative w-full h-full flex-1">
       <div
         v-for="mosaicPart of gameStore.mosaicParts"
         :key="mosaicPart.path"
         class="w-full h-full absolute left-0 top-0"
         style="background-size: contain; background-repeat: no-repeat"
-        :style="{ 'background-image': `url(${mosaicPart.path})` }"
+        :style="{ 'background-image': `url('/images/mosaic/${mosaicPart}.webp')` }"
       ></div>
     </div>
   </div>

@@ -24,7 +24,9 @@ const currentCardIndex = ref(0);
 
 watch([props.card], ([currentCard]) => {
   if (currentCard) {
-    const hasEncryption = currentCard.hintCards.find(x => x.encryption);
+    console.info('Current card:', currentCard);
+    console.info('Encryption present?', currentCard.hintCards.find( (x: any) => x.encryption))
+    const hasEncryption = currentCard.hintCards.find( (x :any) => x.encryption);
     if (!hasEncryption) {
       emit('earned');
     }
@@ -122,7 +124,7 @@ watch([props.card], ([currentCard]) => {
           </div>
 
           <!-- text -->
-          <div class="card-image-text text-frame flex-1 overflow-auto m-4 pt-4">
+          <div class="card-image-text text-frame flex-1 overflow-auto m-4 mt-0 pt-4 border-t border-orange">
             <div
               v-html="
                 getOptionallyTranslatedText(
