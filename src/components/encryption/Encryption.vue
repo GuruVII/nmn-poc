@@ -74,10 +74,10 @@ if (props.collected) {
 <template>
   <div class="flex flex-col w-full encryption-positioning">
     <div class="flex encryption-positioning">
-      <span>{{ labels.message[locale] }}:</span><span>{{ message }}</span>
+      <span>{{ $t('encryption.message') }}:</span><span>{{ message }}</span>
     </div>
     <div class="flex flex-row w-full encryption-positioning">
-      <span>{{ labels.code[locale] }}: </span>
+      <span>{{ $t('encryption.code') }}: </span>
       <input
         class="encryption-input"
         type="text"
